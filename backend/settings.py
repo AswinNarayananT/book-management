@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from decouple import config, Csv
+import cloudinary
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'accounts'
+    'cloudinary',
+    'cloudinary_storage',
+    'accounts',
+    'books',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +85,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -105,6 +110,15 @@ DATABASES = {
         'PORT': config('DB_PORT', cast=int),
     }
 }
+
+
+cloudinary.config( 
+  cloud_name = config('CLOUDINARY_CLOUD_NAME'), 
+  api_key = config('CLOUDINARY_API_KEY'), 
+  api_secret = config('CLOUDINARY_API_SECRET') 
+)
+
+
 
 
 
