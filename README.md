@@ -1,90 +1,73 @@
-Django REST API - Book Management
+### Django REST API - Book Management
 
 This is a Django REST Framework-based API built for managing users, books, and personal reading lists as part of an assessment project.
 
 ---
 
-Features
+### 🔑 Authentication
 
-- User registration, login, and profile management
-- Book creation, viewing, updating, and deletion
-- Public access to all books
-- Personalized reading lists for users
-- Add/remove books from reading lists
-- Token-based authentication using JWT
-- Input validation and informative error responses
+* Token-based authentication using JWT.
+* Access token returned in response.
+* Refresh token stored in cookies and can be used to get a new access token.
 
 ---
 
-Setup Instructions (Windows)
+### 📌 API Endpoints Summary
 
-1. Clone the Project  
-Run the following command in your terminal:
-git clone https://github.com/yourusername/book-management-api.git
-cd backend
+#### ✅ User Auth:
 
-2. Create and Activate Virtual Environment  
-python -m venv venv  
-venv\Scripts\activate
+* `POST /api/v1/accounts/register/` – Register a new user
+* `POST /api/v1/accounts/login/` – Log in and receive JWT tokens
+* `POST /api/v1/accounts/refresh/` – Refresh access token using refresh cookie
+* `GET /api/v1/accounts/profile/` – Get current user profile (auth required)
 
-3. Install Dependencies  
-pip install -r requirements.txt
+#### 📘 Books:
 
-4. Create .env File in the Root Directory  
-Create a file named .env and add the following:
-DEBUG=True  
-SECRET_KEY=your-secret-key  
-ALLOWED_HOSTS=127.0.0.1,localhost  
-CSRF_TRUSTED_ORIGINS=http://127.0.0.1,http://localhost
+* `GET /api/v1/books/` – List all books
+* `POST /api/v1/books/` – Add a new book (auth required)
+* `GET /api/v1/books/:id/` – Retrieve a specific book
+* `PATCH /api/v1/books/:id/` – Update a book (owner only)
+* `DELETE /api/v1/books/:id/` – Delete a book (owner only)
 
-5. Run Migrations  
-python manage.py makemigrations  
-python manage.py migrate
+#### 📚 Reading Lists:
 
-6. Create Superuser (Admin)  
-python manage.py createsuperuser
+* `GET /api/v1/books/reading-lists/` – List your reading lists (auth required)
+* `POST /api/v1/books/reading-lists/` – Create a new reading list
+* `PATCH /api/v1/books/reading-lists/:id/` – Update reading list name
+* `DELETE /api/v1/books/reading-lists/:id/` – Delete a reading list
 
-7. Run Development Server  
-python manage.py runserver
+#### 📖 Reading List Items:
 
-The API will be available at:  
-http://127.0.0.1:8000
+* `POST /api/v1/books/reading-lists/:id/add/` – Add a book to the list
+* `PATCH /api/v1/books/reading-lists/:id/update-position/` – Change book position
+* `DELETE /api/v1/books/reading-lists/:id/remove/` – Remove a book from the list
 
 ---
 
-Authentication
+### 🗂️ Project Structure
 
-The API uses JWT authentication. Tokens are issued upon login and must be included in the Authorization header for protected endpoints.
-
-Example:
-Authorization: Bearer your_access_token
-
----
-
-API Endpoints
-
-API documentation will be added here.
+* `accounts/` – User registration, login, token management
+* `books/` – Book and reading list management
+* `backend/` – Project configs and URLs
 
 ---
 
-Project Structure
+### 🚀 Setup
 
-backend/
-├── accounts/          (User authentication and profile management)
-├── backend/           (Project settings and URLs)
-├── books/             (Book and reading list features)
-├── manage.py
-├── requirements.txt
-└── README.md
+1. `git clone https://github.com/AswinNarayananT/book-management.git`
+2. Create venv: `python -m venv venv && venv\Scripts\activate`
+3. Install deps: `pip install -r requirements.txt`
+4. Add `.env` with Django settings
+5. Run: `python manage.py migrate && python manage.py runserver`
 
 ---
 
-Author
+### 👨‍💻 Author
 
-Your Name
+Aswin Narayanan T
 
 ---
 
-License
+### 📝 License
 
-This project is created for assessment and learning purposes only.
+For assessment and learning use only.
