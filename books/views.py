@@ -9,7 +9,7 @@ from rest_framework import status
 import cloudinary.uploader
 from .models import Book, ReadingList, ReadingListItem
 from django.db.models import F
-
+from django.db import IntegrityError
 
 # Create your views here.
 
@@ -48,8 +48,13 @@ class BookListCreateView(APIView):
         serializer = BookSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save(owner=request.user, pdf_url=pdf_url, thumbnail_url=thumbnail_url)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save(owner=request.user, pdf_url=pdf_url, thumbnail_url=thumbnail_url)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError({
+                    "detail": "You already added a book with this title and author."
+                })
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

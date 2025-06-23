@@ -1,5 +1,8 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
+from django.db import models
+
 
 # Create your models here.
 
@@ -21,6 +24,15 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower('title'),
+                Lower('authors'),
+                'owner',
+                name='unique_case_insensitive_book_per_user'
+            )
+        ]
 
 
 class ReadingList(models.Model):

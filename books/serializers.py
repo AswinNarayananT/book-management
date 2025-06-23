@@ -10,6 +10,13 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+    def validate(self, data):
+        if 'title' in data:
+            data['title'] = data['title'].strip()
+        if 'authors' in data:
+            data['authors'] = data['authors'].strip()
+        return data    
+
 
 class ReadingListItemSerializer(serializers.ModelSerializer):
     book_title = serializers.ReadOnlyField(source='book.title')
