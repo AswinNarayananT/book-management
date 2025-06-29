@@ -1,15 +1,16 @@
+from .serializers import BookSerializer, ReadingListSerializer, ReadingListItemSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.pagination import PageNumberPagination
+from .models import Book, ReadingList, ReadingListItem
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import BookSerializer, ReadingListSerializer, ReadingListItemSerializer
-from rest_framework import status
-import cloudinary.uploader
-from .models import Book, ReadingList, ReadingListItem
-from django.db.models import F
 from django.db import IntegrityError
+from rest_framework import status
+from django.db.models import F
+import cloudinary.uploader
 
 # Create your views here.
 
@@ -19,8 +20,14 @@ class BookListCreateView(APIView):
 
     def get(self, request):
         books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 5
+
+        result_page = paginator.paginate_queryset(books, request)
+        serializer = BookSerializer(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         pdf_file = request.FILES.get('pdf_file')
@@ -117,8 +124,14 @@ class ReadingListView(APIView):
 
     def get(self, request):
         lists = ReadingList.objects.filter(owner=request.user)
-        serializer = ReadingListSerializer(lists, many=True)
-        return Response(serializer.data)
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 5
+
+        result_page = paginator.paginate_queryset(lists, request)
+        serializer = ReadingListSerializer(result_page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = ReadingListSerializer(data=request.data)
