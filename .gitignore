@@ -24,10 +24,9 @@ staticfiles/
 media/
 db.sqlite3
 
-# Migrations
+# Migrations — ✅ keep *.py migration files, ignore only cache
 */migrations/__pycache__/
 */migrations/*.py[cod]
-*/migrations/*.py
 
 # OS
 .DS_Store
